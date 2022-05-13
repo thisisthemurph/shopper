@@ -5,11 +5,11 @@
         /// <summary>
         /// An item that is in the shopping list but has been checked as bought
         /// </summary>
-        Checked,
+        Checked = 0,
 
         /// <summary>
         /// An item that is in the shopping list and has not been bought
         /// </summary>
-        Unchecked
+        Unchecked = 1
     }
 }
