@@ -3,6 +3,17 @@ using Shopper.Api.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Set up CORS
+
+var AllowSpecificOrigins = "allowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: AllowSpecificOrigins, policy =>
+    {
+        policy.WithOrigins("http://localhost:4200");
+    });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -22,6 +33,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(AllowSpecificOrigins);
 
 app.UseAuthorization();
 
