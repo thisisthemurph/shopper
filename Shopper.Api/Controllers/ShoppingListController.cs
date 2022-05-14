@@ -19,7 +19,12 @@ namespace Shopper.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllShoppingLists()
         {
-            return Ok(await _context.ShoppingLists.ToListAsync());
+            var allLists = await _context.ShoppingLists
+                .Include(list => list.Items)
+                .Select(list => new ShoppingListDto(list))
+                .ToListAsync();
+
+            return Ok(allLists);
         }
 
         [HttpGet("{listId}")]
