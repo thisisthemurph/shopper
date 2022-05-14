@@ -1,0 +1,36 @@
+.contents {
+  &__header {
+  }
+
+  &__main {
+  }
+
+  &__items {
+    padding: 0;
+    list-style-type: none;
+    background-color: white;
+  }
+
+  &__item {
+    cursor: pointer;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid lightgray;
+
+    transition: background-color 200ms ease-in-out;
+
+    &:hover {
+      background-color: rgb(243, 242, 242);
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &Name {
+    }
+
+    &Description {
+    }
+  }
+}
