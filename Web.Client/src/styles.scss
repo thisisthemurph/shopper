@@ -1,1 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+@import "_reset.scss";
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,700;1,400;1,600&display=swap");
+
+body {
+  font-family: "Nunito", sans-serif;
+  background-color: rgb(244, 244, 244);
+}
+
+.container {
+  padding: 0 1rem;
+}
