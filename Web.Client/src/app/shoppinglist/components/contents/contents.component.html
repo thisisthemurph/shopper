@@ -8,6 +8,7 @@
       <li *ngFor="let list of shoppingLists" class="contents__item container">
         <h4 class="contents__itemName">{{ list.name }}</h4>
         <p class="contents__itemDescription">{{ list.description }}</p>
+        <p class="contents__itemCount">{{ list.items.length }}</p>
       </li>
     </ul>
   </main>
