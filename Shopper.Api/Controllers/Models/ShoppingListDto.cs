@@ -23,7 +23,14 @@ namespace Shopper.Api.Controllers.Models
             Settings = model.Settings;
             CreatedAt = model.CreatedAt;
             UpdatedAt = model.UpdatedAt;
-            Items = model.Items.Select(x => new ShoppingListItemDto(x)).ToList();
+
+            if (model.Items == null)
+            {
+                Items = new List<ShoppingListItemDto>();
+            } else
+            {
+                Items = model.Items.Select(x => new ShoppingListItemDto(x)).ToList();
+            }
         }
     }
 }
