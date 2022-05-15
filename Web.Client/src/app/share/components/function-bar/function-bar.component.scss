@@ -5,12 +5,14 @@
 
   margin: auto;
   background-color: white;
+  border: solid 1px white;
   border-radius: 30px;
 
+  transition: box-shadow 250ms ease;
   box-shadow: 7px 7px 12px lightgray;
 
   &:focus-within {
-    border: solid 1px rgb(236, 228, 228);
+    border-color: rgb(236, 228, 228);
     box-shadow: unset;
   }
 
