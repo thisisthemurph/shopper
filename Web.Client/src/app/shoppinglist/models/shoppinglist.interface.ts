@@ -15,3 +15,8 @@ export interface ShoppingList {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface ShoppingListCreateDto {
+  name: string;
+  description: string;
+}

@@ -1,2 +1,2 @@
-<app-header></app-header>
-<app-contents></app-contents>
+<app-header (newListEvent)="onNewList($event)"></app-header>
+<app-contents [shoppingLists]="shoppingLists"></app-contents>
