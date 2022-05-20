@@ -17,6 +17,30 @@ namespace Shopper.Api.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.5");
 
+            modelBuilder.Entity("Shopper.Api.Auth.ApplicationUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("BLOB");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("BLOB");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationUsers");
+                });
+
             modelBuilder.Entity("Shopper.Api.Models.ShoppingList", b =>
                 {
                     b.Property<int>("Id")
@@ -27,7 +51,6 @@ namespace Shopper.Api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("TEXT");
 

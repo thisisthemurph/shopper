@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shopper.Api.Contexts;
 using Shopper.Api.Controllers.Models;
@@ -8,12 +9,13 @@ namespace Shopper.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ShoppingListController : ControllerBase
     {
         private readonly ShoppingListContext _context;
-        public ShoppingListController()
+        public ShoppingListController(ShoppingListContext context)
         {
-            _context = new ShoppingListContext();
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         [HttpGet]
