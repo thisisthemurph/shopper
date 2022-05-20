@@ -11,9 +11,9 @@ namespace Shopper.Api.Controllers
     public class ShoppingListItemController : ControllerBase
     {
         private readonly ShoppingListContext _context;
-        public ShoppingListItemController()
+        public ShoppingListItemController(ShoppingListContext context)
         {
-            _context = new ShoppingListContext();
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         [HttpPut("{itemId}")]

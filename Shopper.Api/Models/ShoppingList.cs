@@ -1,5 +1,4 @@
-﻿using Shopper.Api.Controllers.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Shopper.Api.Models
