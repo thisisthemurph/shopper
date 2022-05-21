@@ -13,9 +13,9 @@ export class AppComponent implements OnInit {
   constructor(private shoppingService: ShoppingService) {}
 
   ngOnInit(): void {
-    this.shoppingService
-      .getShoppingLists()
-      .subscribe((lists) => this.setShoppingListsSorted(lists));
+    // this.shoppingService
+    //   .getShoppingLists()
+    //   .subscribe((lists) => this.setShoppingListsSorted(lists));
   }
 
   onNewList($event: ShoppingList) {
