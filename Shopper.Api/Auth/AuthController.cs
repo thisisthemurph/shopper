@@ -24,7 +24,7 @@ namespace Shopper.Api.Auth
 
         [HttpPost]
         [Route("register")]
-        public async Task<ActionResult<ApplicationUser>> Register(UserRegisterDto request)
+        public async Task<ActionResult<UserDto>> Register(UserRegisterDto request)
         {
             // Does the user already exist?
             var foundUser = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == request.Email);
@@ -50,12 +50,12 @@ namespace Shopper.Api.Auth
             _context.ApplicationUsers.Add(newUser);
             await _context.SaveChangesAsync();
 
-            return Ok(newUser);
+            return Ok(new UserDto(newUser));
         }
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<string>> Login(UserLoginDto request)
+        public async Task<ActionResult> Login(UserLoginDto request)
         {
             // Does a user exist?
             var foundUser = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == request.Email);
@@ -76,7 +76,7 @@ namespace Shopper.Api.Auth
             }
 
             var token = CreateToken(request);
-            return Ok(token);
+            return Ok(new { Data = token });
         }
 
         private string CreateToken(UserLoginDto user)
