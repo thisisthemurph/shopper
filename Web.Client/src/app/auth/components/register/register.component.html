@@ -1,0 +1,67 @@
+<form
+  class="container register-form"
+  [formGroup]="registerForm"
+  (ngSubmit)="onSubmit()"
+>
+  <h2>Sign up...</h2>
+
+  <div class="alert" *ngIf="submitErrors.length > 0">
+    <div *ngFor="let error of submitErrors" class="alert__item">
+      {{ error }}
+    </div>
+  </div>
+
+  <section>
+    <label for="emailAddress">Email</label>
+    <input
+      type="email"
+      name="email"
+      id="emailAddress"
+      formControlName="email"
+      [ngClass]="{ error: email?.invalid && (email?.dirty || email?.touched) }"
+    />
+
+    <div
+      *ngIf="email?.invalid && (email?.dirty || email?.touched)"
+      class="alert alert-danger"
+    >
+      <div *ngIf="email?.errors?.['required']">
+        An email address is required.
+      </div>
+      <div *ngIf="email?.errors?.['email']">
+        The valie entered is not an email address.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <label for="password">Password</label>
+    <input
+      type="password"
+      name="password"
+      id="password"
+      formControlName="password"
+      [ngClass]="{
+        error: password?.invalid && (password?.dirty || password?.touched)
+      }"
+    />
+
+    <div
+      class="alert alert-danger"
+      *ngIf="password?.invalid && (password?.dirty || password?.touched)"
+    >
+      <div *ngIf="password?.errors?.['required']">A password is required.</div>
+      <div *ngIf="password?.errors?.['minLength']">
+        The password must be at lest 8 characters in length.
+      </div>
+    </div>
+  </section>
+
+  <button
+    type="submit"
+    class="button"
+    [disabled]="isSubmitting || registerForm.invalid"
+  >
+    Sig up
+  </button>
+</form>
