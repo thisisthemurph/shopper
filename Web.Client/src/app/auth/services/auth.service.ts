@@ -12,6 +12,14 @@ interface TokenRequestResponse {
   data: string;
 }
 
+interface UserDto {
+  email: string;
+}
+
+interface UserRegisterDto extends UserDto {
+  password: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -28,5 +36,10 @@ export class AuthService {
         httpOptions
       )
       .pipe(map((response) => response.data));
+  }
+
+  public register(user: UserRegisterDto): Observable<UserDto> {
+    const url = `${this.baseUrl}/register`;
+    return this.http.post<UserDto>(url, user, httpOptions);
   }
 }
