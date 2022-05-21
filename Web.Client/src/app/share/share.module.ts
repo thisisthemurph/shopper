@@ -7,6 +7,6 @@ import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [HeaderComponent, FunctionBarComponent],
   imports: [CommonModule, FormsModule],
-  exports: [HeaderComponent],
+  exports: [HeaderComponent, FunctionBarComponent],
 })
 export class ShareModule {}

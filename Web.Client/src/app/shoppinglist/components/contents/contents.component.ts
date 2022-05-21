@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { take } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription, take } from 'rxjs';
 import { ShoppingList } from '../../models/shoppinglist.interface';
 import { ShoppingService } from '../../services/shopping.service';
 
@@ -8,15 +8,48 @@ import { ShoppingService } from '../../services/shopping.service';
   templateUrl: './contents.component.html',
   styleUrls: ['./contents.component.scss'],
 })
-export class ContentsComponent implements OnInit {
-  @Input() shoppingLists: ShoppingList[] = [];
-  // public shoppingLists: ShoppingList[] = [];
+export class ContentsComponent implements OnInit, OnDestroy {
+  public shoppingLists: ShoppingList[] = [];
+  private onCreate$!: Subscription;
 
-  // constructor(private shoppingService: ShoppingService) {}
+  constructor(private shoppingService: ShoppingService) {}
 
-  ngOnInit(): void {
-    // this.shoppingService
-    //   .getShoppingLists()
-    //   .subscribe((lists) => (this.shoppingLists = lists));
+  ngOnInit() {
+    this.onCreate$ = this.shoppingService.onCreate.subscribe((listName) =>
+      this.createShoppingList(listName)
+    );
+
+    this.shoppingService
+      .getShoppingLists()
+      .pipe(take(1))
+      .subscribe((lists) => this.setShoppingListsSorted(lists));
+  }
+
+  ngOnDestroy(): void {
+    this.onCreate$.unsubscribe();
+  }
+
+  private createShoppingList(listName: string) {
+    console.log({ listName });
+    this.shoppingService
+      .add({
+        name: listName,
+        description: '',
+      })
+      .pipe(take(1))
+      .subscribe((shoppingList) => {
+        this.setShoppingListsSorted([...this.shoppingLists, shoppingList]);
+      });
+  }
+
+  private setShoppingListsSorted(lists: ShoppingList[]): void {
+    this.shoppingLists = lists.sort((a, b) => {
+      const aCreated = new Date(a.createdAt);
+      const bCreated = new Date(b.createdAt);
+
+      if (aCreated > bCreated) return -1;
+      if (aCreated < bCreated) return 1;
+      return 0;
+    });
   }
 }

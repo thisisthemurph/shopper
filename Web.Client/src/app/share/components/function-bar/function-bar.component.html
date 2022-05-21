@@ -1,17 +1,19 @@
-<div class="functionBar">
-  <div class="functionBar__logo">
-    <h1 class="logo">Sh</h1>
-  </div>
-  <div class="functionBar__main">
-    <input
-      type="text"
-      placeholder="Create a new list"
-      [(ngModel)]="value"
-      (keyup.enter)="onNewShoppingList()"
-    />
-  </div>
-  <div class="functionBar__actions">
-    <button (click)="onNewShoppingList()">➕</button>
-    <button>⚙️</button>
+<div class="container">
+  <div class="functionBar">
+    <div class="functionBar__logo">
+      <h1 class="logo">Sh</h1>
+    </div>
+    <div class="functionBar__main">
+      <input
+        type="text"
+        placeholder="{{ placeholder }}"
+        [(ngModel)]="value"
+        (keyup.enter)="onAction()"
+      />
+    </div>
+    <div class="functionBar__actions">
+      <button (click)="onAction()">➕</button>
+      <button>⚙️</button>
+    </div>
   </div>
 </div>

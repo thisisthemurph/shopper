@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { EventEmitter, Injectable } from '@angular/core';
+import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
   ShoppingList,
   ShoppingListCreateDto,
 } from '../models/shoppinglist.interface';
+import { ApiService } from 'src/app/api/services/api.service';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -16,19 +17,16 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class ShoppingService {
-  private baseUrl = 'https://localhost:7009/api/ShoppingList';
+  public onCreate: EventEmitter<string> = new EventEmitter<string>();
+  private urlPath = 'ShoppingList';
 
-  constructor(private http: HttpClient) {}
+  constructor(private api: ApiService) {}
 
   public getShoppingLists(): Observable<ShoppingList[]> {
-    return this.http.get<ShoppingList[]>(this.baseUrl);
+    return this.api.get<ShoppingList[]>(this.urlPath);
   }
 
   public add(shoppingList: ShoppingListCreateDto): Observable<ShoppingList> {
-    return this.http.post<ShoppingList>(
-      this.baseUrl,
-      shoppingList,
-      httpOptions
-    );
+    return this.api.post<ShoppingList>(this.urlPath, shoppingList);
   }
 }
