@@ -4,11 +4,11 @@ import { ShoppingList } from '../../models/shoppinglist.interface';
 import { ShoppingService } from '../../services/shopping.service';
 
 @Component({
-  selector: 'app-contents',
-  templateUrl: './contents.component.html',
-  styleUrls: ['./contents.component.scss'],
+  selector: 'app-list-group',
+  templateUrl: './list-group.component.html',
+  styleUrls: ['./list-group.component.scss'],
 })
-export class ContentsComponent implements OnInit, OnDestroy {
+export class ListGroupComponent implements OnInit, OnDestroy {
   public shoppingLists: ShoppingList[] = [];
   private onCreate$!: Subscription;
 
