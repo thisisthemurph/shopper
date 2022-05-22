@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ContentsComponent } from './components/contents/contents.component';
+import { ListGroupComponent } from './components/contents/list-group.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [{ path: '', component: ContentsComponent }];
+const routes: Routes = [{ path: '', component: ListGroupComponent }];
 
 @NgModule({
-  declarations: [ContentsComponent],
+  declarations: [ListGroupComponent],
   imports: [RouterModule.forChild(routes), CommonModule, HttpClientModule],
-  exports: [ContentsComponent],
+  exports: [ListGroupComponent],
 })
 export class ShoppinglistModule {}
