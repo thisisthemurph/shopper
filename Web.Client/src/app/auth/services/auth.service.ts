@@ -51,10 +51,11 @@ export class AuthService {
    */
   public isAuthenticated(): boolean {
     const token = Auth.getToken();
+
     if (!token) {
       return false;
     }
 
-    return this.jwtHelper.isTokenExpired(token);
+    return !this.jwtHelper.isTokenExpired(token);
   }
 }
