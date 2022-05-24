@@ -1,7 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Event } from '@angular/router';
-import { take } from 'rxjs';
-import { ShoppingList } from 'src/app/shoppinglist/models/shoppinglist.interface';
+import { Component, Input } from '@angular/core';
 import { ShoppingService } from 'src/app/shoppinglist/services/shopping.service';
 
 @Component({

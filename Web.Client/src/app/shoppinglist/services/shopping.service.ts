@@ -22,6 +22,11 @@ export class ShoppingService {
 
   constructor(private api: ApiService) {}
 
+  public getList(listId: number): Observable<ShoppingList> {
+    const url = `${this.urlPath}/${listId}`;
+    return this.api.get<ShoppingList>(url);
+  }
+
   public getShoppingLists(): Observable<ShoppingList[]> {
     return this.api.get<ShoppingList[]>(this.urlPath);
   }

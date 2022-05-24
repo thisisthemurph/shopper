@@ -1,0 +1,36 @@
+<div class="container" *ngIf="isLoading">
+  <p>Loading...</p>
+</div>
+
+<div class="container" *ngIf="!isLoading">
+  <header>
+    <h2>{{ shoppingList?.name }}</h2>
+    <p>{{ shoppingList?.description }}</p>
+  </header>
+
+  <main>
+    <!-- Show the list items -->
+
+    <ul
+      class="list-items"
+      role="list"
+      *ngIf="shoppingList && shoppingList.items.length > 0"
+    >
+      <li class="list-item" *ngFor="let item of shoppingList.items"></li>
+    </ul>
+
+    <!-- There are no items in the list -->
+
+    <ul
+      class="list-items"
+      role="list"
+      *ngIf="shoppingList && shoppingList.items.length === 0"
+    >
+      <li class="list-item list-item--empty">
+        Your shopping list is empty right now...
+      </li>
+    </ul>
+  </main>
+
+  <pre>{{ shoppingList | json }}</pre>
+</div>
