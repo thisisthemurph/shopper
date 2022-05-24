@@ -7,7 +7,27 @@ export abstract class Auth {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
 
-  public static getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+  /**
+   * Returns the token from local storage
+   * @param includeBearer determine if the 'bearer' string is to be retained at the beginning of the token
+   * @returns the token or null if no token is available
+   */
+  public static getToken(includeBearer = false): string | null {
+    const token = localStorage.getItem(this.TOKEN_KEY);
+
+    if (!token) return null;
+
+    if (includeBearer) {
+      return token;
+    }
+
+    const [bearer, secret] = token.split(' ', 1);
+
+    // If this isn't the string 'bearer' somthing is strange
+    if (bearer.toLowerCase() !== 'bearer') {
+      return null;
+    }
+
+    return secret;
   }
 }
