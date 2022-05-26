@@ -10,7 +10,10 @@ import { Auth } from './auth/Auth';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
-  { path: 'auth', loadChildren: () => AuthModule },
+  {
+    path: 'auth',
+    loadChildren: () => AuthModule,
+  },
   {
     path: 'list',
     loadChildren: () => ShoppinglistModule,
