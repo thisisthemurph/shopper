@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Shopper.Api.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Shopper.Api.Services;
 
 namespace Shopper.Api.Auth
 {
@@ -15,11 +16,13 @@ namespace Shopper.Api.Auth
     {
         private readonly IConfiguration _configuration;
         private readonly ShoppingListContext _context;
+        private EmailService _emailService;
 
         public AuthController(IConfiguration configuration, ShoppingListContext context)
         {
             _configuration = configuration;
             _context = context;
+            _emailService = new EmailService(_configuration.GetSection("AppSettings:EmailServiceToken").Value);
         }
 
         [HttpPost]
@@ -86,7 +89,7 @@ namespace Shopper.Api.Auth
 
         [HttpPost]
         [Route("RequestPasswordReset")]
-        public async Task<ActionResult> RegisterPasswordReset(UserDto model)
+        public async Task<ActionResult> RegisterPasswordReset(UserPasswordResetRequestDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -97,22 +100,19 @@ namespace Shopper.Api.Auth
 
             if (!userExists)
             {
-                return BadRequest();
+                // We don't want to inform that the user does not exist
+                return Ok();
             }
 
             var token = CreatePasswordResetToken(model.Email);
-            var response = new TokenResponseDto
-            {
-                Data = token
-            };
+            await _emailService.SendPassworResetEmailAsync(model.Email, token);
 
-            // TODO: Respond with confirmation of email sent
-            return Ok(response);
+            return Ok();
         }
 
         [HttpPost]
         [Route("PasswordReset")]
-        public async Task<ActionResult> ActionPasswordReset(UserPasswordResetDto model)
+        public async Task<ActionResult> ActionPasswordReset([FromBody] UserPasswordResetDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -130,8 +130,8 @@ namespace Shopper.Api.Auth
             // Get email address from tokem
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.ReadJwtToken(model.Token);
-            var emailClaim = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
+            var jwtToken = tokenHandler.ReadJwtToken(model.Token);
+            var emailClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
 
             if (emailClaim == null)
             {
@@ -140,7 +140,7 @@ namespace Shopper.Api.Auth
 
             var email = emailClaim.Value;
             var user = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == email);
-            
+
             if (user == null)
             {
                 return Unauthorized();
