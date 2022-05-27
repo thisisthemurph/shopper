@@ -21,7 +21,6 @@ export class ListPageComponent implements OnInit {
       const id: number = Number(params.get('listId'));
 
       this.shoppingService.getList(id).subscribe((list) => {
-        console.log({ list });
         this.shoppingList = list;
       });
     });

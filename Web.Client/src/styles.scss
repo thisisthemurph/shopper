@@ -10,6 +10,19 @@ body {
   padding: 0 1rem;
 }
 
+p {
+  line-height: 1.5;
+  margin-bottom: 0.7rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  line-height: 2;
+}
+
 // Form Styles
 
 $input-bg: lightgray;
@@ -21,7 +34,8 @@ input {
   border-radius: 5px;
   padding: 0.5rem 1rem;
 
-  &:focus {
+  &:focus,
+  &:active {
     outline: 2px solid rgb(192, 123, 192);
   }
 
@@ -50,7 +64,8 @@ input {
   }
 }
 
-form {
+form,
+.form {
   width: 100%;
 
   .alert {
@@ -79,4 +94,14 @@ form {
   button[type="submit"] {
     margin-top: 1rem;
   }
+}
+
+.status-message {
+  padding: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+
+  border-radius: 5px;
+  border: solid 1px rgb(159, 107, 255);
+  background-color: rgb(214, 192, 255);
 }
