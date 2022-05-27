@@ -11,6 +11,7 @@ import { Auth } from '../../Auth';
 import { AuthService } from '../../services/auth.service';
 import { standardHttpErrorResponseToErrorArray } from 'src/app/api/helpers/httpErrorResponse.helper';
 import { StandardHttpErrorResponse } from 'src/app/api/models/httpErrorResponse.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +27,7 @@ export class LoginComponent implements OnInit {
   isSubmitting = false;
   submitErrors: string[] = [];
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -46,7 +47,10 @@ export class LoginComponent implements OnInit {
       .login(this.loginForm.value.email, this.loginForm.value.password)
       .pipe(take(1))
       .subscribe({
-        next: (token) => Auth.storeToken(token),
+        next: (token) => {
+          Auth.storeToken(token);
+          this.router.navigate(['list']);
+        },
         error: (error: StandardHttpErrorResponse) => {
           this.isSubmitting = false;
           this.submitErrors = [

@@ -30,7 +30,6 @@ export class ListGroupComponent implements OnInit, OnDestroy {
   }
 
   private createShoppingList(listName: string) {
-    console.log({ listName });
     this.shoppingService
       .add({
         name: listName,

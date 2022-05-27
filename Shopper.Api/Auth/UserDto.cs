@@ -4,6 +4,8 @@ namespace Shopper.Api.Auth
 {
     public class UserDto
     {
+        [Required]
+        [EmailAddress]
         public string Email { get; set; } = string.Empty;
 
         public UserDto() {}

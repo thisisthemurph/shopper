@@ -55,7 +55,7 @@ namespace Shopper.Api.Auth
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult> Login(UserLoginDto request)
+        public async Task<ActionResult<TokenResponseDto>> Login(UserLoginDto request)
         {
             // Does a user exist?
             var foundUser = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == request.Email);
@@ -75,25 +75,142 @@ namespace Shopper.Api.Auth
                 return BadRequest("Wrong password!");
             }
 
-            var token = CreateToken(request);
-            return Ok(new { Data = token });
+            var token = CreateAuthToken(request);
+            var response = new TokenResponseDto
+            {
+                Data = token,
+            };
+
+            return Ok(response);
         }
 
-        private string CreateToken(UserLoginDto user)
+        [HttpPost]
+        [Route("RequestPasswordReset")]
+        public async Task<ActionResult> RegisterPasswordReset(UserDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userExists = (await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == model.Email)) != null;
+
+            if (!userExists)
+            {
+                return BadRequest();
+            }
+
+            var token = CreatePasswordResetToken(model.Email);
+            var response = new TokenResponseDto
+            {
+                Data = token
+            };
+
+            // TODO: Respond with confirmation of email sent
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("PasswordReset")]
+        public async Task<ActionResult> ActionPasswordReset(UserPasswordResetDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var secret = _configuration.GetSection("AppSettings:Token").Value;
+            var isValidToken = await TokenIsValid(model.Token, secret);
+
+            if (!isValidToken)
+            {
+                return Unauthorized();
+            }
+
+            // Get email address from tokem
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.ReadJwtToken(model.Token);
+            var emailClaim = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
+
+            if (emailClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            var email = emailClaim.Value;
+            var user = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == email);
+            
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            GeneratePasswordHash(model.Password, out var passwordHash, out var salt);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = salt;
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        private async Task<bool> TokenIsValid(string token, string secret)
+        {
+            // https://dotnetcoretutorials.com/2020/01/15/creating-and-validating-jwt-tokens-in-asp-net-core/
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                var validity = await tokenHandler.ValidateTokenAsync(
+                    token,
+                    new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        IssuerSigningKey = key
+                    });
+
+                return validity.IsValid;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private string CreatePasswordResetToken(string email)
         {
             List<Claim> claims = new()
-            { 
+            {
+                new Claim(ClaimTypes.Email, email),
+                new Claim("method", "passwordReset"),
+            };
+
+            var secret = _configuration.GetSection("AppSettings:Token").Value;
+            return CreateToken(claims, secret, DateTime.Now.AddHours(1));
+        }
+
+        private string CreateAuthToken(UserLoginDto user)
+        {
+            List<Claim> claims = new()
+            {
                 new Claim(ClaimTypes.Email, user.Email),
             };
 
             var secret = _configuration.GetSection("AppSettings:Token").Value;
+            return CreateToken(claims, secret);
+        }
+
+        private string CreateToken(IEnumerable<Claim> claims, string secret, DateTime? expiration = null)
+        {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: expiration ?? DateTime.Now.AddDays(1),
                 signingCredentials: credentials);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);

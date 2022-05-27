@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Auth } from '../Auth';
 
@@ -43,6 +43,39 @@ export class AuthService {
   public register(user: UserRegisterDto): Observable<UserDto> {
     const url = `${this.baseUrl}/register`;
     return this.http.post<UserDto>(url, user, httpOptions);
+  }
+
+  public requestPasswordReset(email: string): Observable<boolean> {
+    const url = `${this.baseUrl}/RequestPasswordReset`;
+    return this.http.post<boolean>(url, { email }, httpOptions).pipe(
+      map(() => {
+        return true;
+      }),
+      catchError(() => {
+        return of(false);
+      })
+    );
+  }
+
+  public resetPassword(
+    token: string,
+    newPassword: string
+  ): Observable<boolean> {
+    const url = `${this.baseUrl}/PasswordReset`;
+
+    const passwordResetDto = {
+      token: token,
+      password: newPassword,
+    };
+
+    return this.http.post(url, passwordResetDto, httpOptions).pipe(
+      map(() => {
+        return true;
+      }),
+      catchError(() => {
+        return of(false);
+      })
+    );
   }
 
   /**

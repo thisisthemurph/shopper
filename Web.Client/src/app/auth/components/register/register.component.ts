@@ -53,7 +53,6 @@ export class RegisterComponent implements OnInit {
       .subscribe({
         next: (user) => console.log({ user }),
         error: (error: StandardHttpErrorResponse) => {
-          console.warn('Ther has been error');
           this.isSubmitting = false;
           this.submitErrors = [
             ...this.submitErrors,
