@@ -8,7 +8,7 @@ namespace Shopper.Api.Extensions
 {
     public static class ServiceExtensions
     {
-        public static void ConfigureAuthentication(this IServiceCollection services, byte[] secretToken)
+        public static void ConfigureAuthentication(this IServiceCollection services, string secretToken)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -16,7 +16,7 @@ namespace Shopper.Api.Extensions
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(secretToken),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretToken)),
                         ValidateIssuer = false,
                         ValidateAudience = false,
                     };
