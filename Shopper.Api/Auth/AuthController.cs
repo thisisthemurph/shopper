@@ -16,13 +16,14 @@ namespace Shopper.Api.Auth
     {
         private readonly IConfiguration _configuration;
         private readonly ShoppingListContext _context;
-        private EmailService _emailService;
+        private IEmailService _emailService;
 
-        public AuthController(IConfiguration configuration, ShoppingListContext context)
+        public AuthController(IConfiguration configuration, ShoppingListContext context, IEmailService emailService)
         {
             _configuration = configuration;
             _context = context;
-            _emailService = new EmailService(_configuration.GetSection("AppSettings:EmailServiceToken").Value);
+            //_emailService = new EmailService(_configuration.GetSection("AppSettings:EmailServiceToken").Value);
+            _emailService = emailService;
         }
 
         [HttpPost]
