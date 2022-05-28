@@ -14,16 +14,15 @@ namespace Shopper.Api.Auth
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
         private readonly ShoppingListContext _context;
+        private readonly string _jwtTokenSecret;
         private IEmailService _emailService;
 
-        public AuthController(IConfiguration configuration, ShoppingListContext context, IEmailService emailService)
+        public AuthController(ShoppingListContext context, IEmailService emailService, ISercretsService secrets)
         {
-            _configuration = configuration;
             _context = context;
-            //_emailService = new EmailService(_configuration.GetSection("AppSettings:EmailServiceToken").Value);
             _emailService = emailService;
+            _jwtTokenSecret = secrets.JwtSecret;
         }
 
         [HttpPost]
@@ -120,8 +119,8 @@ namespace Shopper.Api.Auth
                 return BadRequest(ModelState);
             }
 
-            var secret = _configuration.GetSection("AppSettings:Token").Value;
-            var isValidToken = await TokenIsValid(model.Token, secret);
+            //var secret = _configuration.GetSection("AppSettings:Token").Value;
+            var isValidToken = await TokenIsValid(model.Token, _jwtTokenSecret);
 
             if (!isValidToken)
             {
@@ -188,8 +187,7 @@ namespace Shopper.Api.Auth
                 new Claim("method", "passwordReset"),
             };
 
-            var secret = _configuration.GetSection("AppSettings:Token").Value;
-            return CreateToken(claims, secret, DateTime.Now.AddHours(1));
+            return CreateToken(claims, _jwtTokenSecret, DateTime.Now.AddHours(1));
         }
 
         private string CreateAuthToken(UserLoginDto user)
@@ -199,8 +197,7 @@ namespace Shopper.Api.Auth
                 new Claim(ClaimTypes.Email, user.Email),
             };
 
-            var secret = _configuration.GetSection("AppSettings:Token").Value;
-            return CreateToken(claims, secret);
+            return CreateToken(claims, _jwtTokenSecret);
         }
 
         private string CreateToken(IEnumerable<Claim> claims, string secret, DateTime? expiration = null)
