@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Shopper.Api.Contexts;
 using Shopper.Api.Controllers.Models;
 using Shopper.Api.Models;
+using Shopper.Api.Services;
 
 namespace Shopper.Api.Controllers
 {
@@ -10,16 +11,17 @@ namespace Shopper.Api.Controllers
     [Route("api/ShoppingList/{shoppingListId}/Item")]
     public class ShoppingListItemController : ControllerBase
     {
-        private readonly ShoppingListContext _context;
-        public ShoppingListItemController(ShoppingListContext context)
+        private readonly IContextService _context;
+
+        public ShoppingListItemController(IContextService contextService)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = contextService ?? throw new ArgumentNullException(nameof(contextService));
         }
 
         [HttpPut("{itemId}")]
         public async Task<IActionResult> UpdateItem(int shoppingListId, int itemId, ShoppingListItemUpdateDto data)
         {
-            var list = await _context.ShoppingLists
+            var list = await _context.Database.ShoppingLists
                 .Include(x => x.Items)
                 .FirstOrDefaultAsync(x => x.Id == shoppingListId);
 
@@ -36,7 +38,7 @@ namespace Shopper.Api.Controllers
             }
 
             item.Name = data.Name;
-            await _context.SaveChangesAsync();
+            await _context.Database.SaveChangesAsync();
 
             return Ok(new ShoppingListItemDto(item));
         }
@@ -44,7 +46,7 @@ namespace Shopper.Api.Controllers
         [HttpPut("{itemId}/status")]
         public async Task<IActionResult> UpdateItemStatus(int shoppingListId, int itemId, ShoppingListItemStatus status)
         {
-            var list = await _context.ShoppingLists
+            var list = await _context.Database.ShoppingLists
                 .Include(x => x.Items)
                 .FirstOrDefaultAsync(x => x.Id == shoppingListId);
 
@@ -61,7 +63,7 @@ namespace Shopper.Api.Controllers
             }
 
             item.Status = status;
-            await _context.SaveChangesAsync();
+            await _context.Database.SaveChangesAsync();
 
             return Ok();
         }

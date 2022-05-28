@@ -5,21 +5,21 @@ using Shopper.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Secrets
-var jwtSecret = builder.Configuration["Secrets:JwtSecret"];
-var emailServiceToken = builder.Configuration["Secrets:EmailServiceToken"];
-
+// Database context
 builder.Services.AddDbContext<ShoppingListContext>();
+
 var corsPolicyName = builder.Services.ConfigureCors();
 builder.Services.AddControllers();
 
 builder.Services.ConfigureSwagger();
 
 // Configure authentication
+var jwtSecret = builder.Configuration["Secrets:JwtSecret"];
 builder.Services.ConfigureAuthentication(jwtSecret);
 
 // Register services
 builder.Services.AddScoped<ISercretsService, SecretsService>();
+builder.Services.AddScoped<IContextService, ContextService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
