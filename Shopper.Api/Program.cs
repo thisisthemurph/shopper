@@ -1,4 +1,5 @@
 using System.Text;
+using Shopper.Api.Auth.Services;
 using Shopper.Api.Contexts;
 using Shopper.Api.Extensions;
 using Shopper.Api.Services;
@@ -20,6 +21,7 @@ builder.Services.ConfigureAuthentication(jwtSecret);
 // Register services
 builder.Services.AddScoped<ISercretsService, SecretsService>();
 builder.Services.AddScoped<IContextService, ContextService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();

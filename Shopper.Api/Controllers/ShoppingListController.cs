@@ -1,19 +1,23 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Shopper.Api.Contexts;
+using Shopper.Api.ActionFilters;
+using Shopper.Api.Auth;
 using Shopper.Api.Controllers.Models;
+using Shopper.Api.Extensions;
 using Shopper.Api.Models;
 using Shopper.Api.Services;
 
 namespace Shopper.Api.Controllers
 {
+
+    
+
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
     public class ShoppingListController : ControllerBase
     {
-
         private readonly IContextService _context;
 
         public ShoppingListController(IContextService contextService)
@@ -22,22 +26,29 @@ namespace Shopper.Api.Controllers
         }
 
         [HttpGet]
+        [TypeFilter(typeof(ApplicationUserFilter))]
         public async Task<IActionResult> GetAllShoppingLists()
         {
-            var allLists = await _context.Database.ShoppingLists
+            var user = this.GetApplicationUser();
+
+            var userLists = await _context.Database.ShoppingLists
                 .Include(list => list.Items)
+                .Where(list => list.User == user)
                 .Select(list => new ShoppingListDto(list))
                 .ToListAsync();
 
-            return Ok(allLists);
+            return Ok(userLists);
         }
 
         [HttpGet("{listId}")]
+        [TypeFilter(typeof(ApplicationUserFilter))]
         public async Task<ActionResult> GetShoppingList(int listId)
         {
+            var user = this.GetApplicationUser();
+
             var foundList = await _context.Database.ShoppingLists
                 .Include(list => list.Items)
-                .FirstOrDefaultAsync(list => list.Id == listId);
+                .FirstOrDefaultAsync(list => list.Id == listId && list.User == user);
 
             if (foundList == null)
             {
@@ -48,14 +59,18 @@ namespace Shopper.Api.Controllers
         }
 
         [HttpPost]
+        [TypeFilter(typeof(ApplicationUserFilter))]
         public async Task<ActionResult> CreateShoppingList(ShoppingListCreateDto shoppingList)
         {
+            var user = this.GetApplicationUser();
+
             var newShoppingList = new ShoppingList
             {
                 Name = shoppingList.Name,
                 Description = shoppingList.Description,
                 CreatedAt = DateTimeOffset.Now,
-                UpdatedAt = DateTimeOffset.Now
+                UpdatedAt = DateTimeOffset.Now,
+                User = user,
             };
 
             _context.Database.ShoppingLists.Add(newShoppingList);
@@ -68,11 +83,14 @@ namespace Shopper.Api.Controllers
         }
 
         [HttpPost("{listId}/item")]
+        [TypeFilter(typeof(ApplicationUserFilter))]
         public async Task<ActionResult> AddShoppingListItem(int listId, ShoppingListItemCreateDto shoppingListItem)
         {
+            var user = this.GetApplicationUser();
+
             var shoppingList = await _context.Database.ShoppingLists
                 .Include(list => list.Items)
-                .FirstOrDefaultAsync(list => list.Id == listId);
+                .FirstOrDefaultAsync(list => list.Id == listId && list.User == user);
 
             if (shoppingList == null)
             {
@@ -91,9 +109,13 @@ namespace Shopper.Api.Controllers
         }
 
         [HttpPut("{listId}")]
+        [TypeFilter(typeof(ApplicationUserFilter))]
         public async Task<ActionResult> UpdateList(int listId, ShoppingListCreateDto newDetails)
         {
-            var shoppingList = _context.Database.ShoppingLists.FirstOrDefault(x => x.Id == listId);
+            var user = this.GetApplicationUser();
+
+            var shoppingList = _context.Database.ShoppingLists
+                .FirstOrDefault(list => list.Id == listId && list.User == user);
 
             if (shoppingList == null)
             {
@@ -109,9 +131,13 @@ namespace Shopper.Api.Controllers
         }
 
         [HttpDelete("listId")]
+        [TypeFilter(typeof(ApplicationUserFilter))]
         public async Task<ActionResult> Delete(int listId)
         {
-            var foundList = _context.Database.ShoppingLists.FirstOrDefault(x => x.Id == listId);
+            var user = this.GetApplicationUser();
+
+            var foundList = _context.Database.ShoppingLists
+                .FirstOrDefault(list => list.Id == listId && list.User == user);
 
             if (foundList == null)
             {

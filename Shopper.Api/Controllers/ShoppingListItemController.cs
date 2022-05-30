@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Shopper.Api.ActionFilters;
 using Shopper.Api.Contexts;
 using Shopper.Api.Controllers.Models;
+using Shopper.Api.Extensions;
 using Shopper.Api.Models;
 using Shopper.Api.Services;
 
@@ -9,6 +12,7 @@ namespace Shopper.Api.Controllers
 {
     [ApiController]
     [Route("api/ShoppingList/{shoppingListId}/Item")]
+    [Authorize]
     public class ShoppingListItemController : ControllerBase
     {
         private readonly IContextService _context;
@@ -19,11 +23,13 @@ namespace Shopper.Api.Controllers
         }
 
         [HttpPut("{itemId}")]
+        [TypeFilter(typeof(ApplicationUserFilter))]
         public async Task<IActionResult> UpdateItem(int shoppingListId, int itemId, ShoppingListItemUpdateDto data)
         {
+            var user = this.GetApplicationUser();
             var list = await _context.Database.ShoppingLists
                 .Include(x => x.Items)
-                .FirstOrDefaultAsync(x => x.Id == shoppingListId);
+                .FirstOrDefaultAsync(x => x.Id == shoppingListId && x.User == user);
 
             if (list == null)
             {
@@ -44,11 +50,13 @@ namespace Shopper.Api.Controllers
         }
 
         [HttpPut("{itemId}/status")]
+        [TypeFilter(typeof(ApplicationUserFilter))]
         public async Task<IActionResult> UpdateItemStatus(int shoppingListId, int itemId, ShoppingListItemStatus status)
         {
+            var user = this.GetApplicationUser();
             var list = await _context.Database.ShoppingLists
                 .Include(x => x.Items)
-                .FirstOrDefaultAsync(x => x.Id == shoppingListId);
+                .FirstOrDefaultAsync(x => x.Id == shoppingListId && x.User == user);
 
             if (list == null)
             {
