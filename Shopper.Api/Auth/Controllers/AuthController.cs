@@ -14,11 +14,11 @@ namespace Shopper.Api.Auth
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly ShoppingListContext _context;
+        private readonly IContextService _context;
         private readonly string _jwtTokenSecret;
         private IEmailService _emailService;
 
-        public AuthController(ShoppingListContext context, IEmailService emailService, ISercretsService secrets)
+        public AuthController(IContextService context, IEmailService emailService, ISercretsService secrets)
         {
             _context = context;
             _emailService = emailService;
@@ -30,7 +30,7 @@ namespace Shopper.Api.Auth
         public async Task<ActionResult<UserDto>> Register(UserRegisterDto request)
         {
             // Does the user already exist?
-            var foundUser = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == request.Email);
+            var foundUser = await _context.Database.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == request.Email);
             if (foundUser != null)
             {
                 return BadRequest("A user already exists with the given email address.");
@@ -50,8 +50,8 @@ namespace Shopper.Api.Auth
                 PasswordSalt = passwordSalt
             };
 
-            _context.ApplicationUsers.Add(newUser);
-            await _context.SaveChangesAsync();
+            _context.Database.ApplicationUsers.Add(newUser);
+            await _context.Database.SaveChangesAsync();
 
             return Ok(new UserDto(newUser));
         }
@@ -61,7 +61,7 @@ namespace Shopper.Api.Auth
         public async Task<ActionResult<TokenResponseDto>> Login(UserLoginDto request)
         {
             // Does a user exist?
-            var foundUser = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == request.Email);
+            var foundUser = await _context.Database.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == request.Email);
             if (foundUser == null)
             {
                 return BadRequest("A user with that email address could not be found.");
@@ -96,7 +96,7 @@ namespace Shopper.Api.Auth
                 return BadRequest(ModelState);
             }
 
-            var userExists = (await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == model.Email)) != null;
+            var userExists = (await _context.Database.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == model.Email)) != null;
 
             if (!userExists)
             {
@@ -139,7 +139,7 @@ namespace Shopper.Api.Auth
             }
 
             var email = emailClaim.Value;
-            var user = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == email);
+            var user = await _context.Database.ApplicationUsers.FirstOrDefaultAsync(x => x.Email == email);
 
             if (user == null)
             {
@@ -150,7 +150,7 @@ namespace Shopper.Api.Auth
             user.PasswordHash = passwordHash;
             user.PasswordSalt = salt;
 
-            await _context.SaveChangesAsync();
+            await _context.Database.SaveChangesAsync();
             return Ok();
         }
 

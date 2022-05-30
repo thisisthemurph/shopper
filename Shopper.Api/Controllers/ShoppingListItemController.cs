@@ -1,27 +1,35 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Shopper.Api.ActionFilters;
 using Shopper.Api.Contexts;
 using Shopper.Api.Controllers.Models;
+using Shopper.Api.Extensions;
 using Shopper.Api.Models;
+using Shopper.Api.Services;
 
 namespace Shopper.Api.Controllers
 {
     [ApiController]
     [Route("api/ShoppingList/{shoppingListId}/Item")]
+    [Authorize]
     public class ShoppingListItemController : ControllerBase
     {
-        private readonly ShoppingListContext _context;
-        public ShoppingListItemController(ShoppingListContext context)
+        private readonly IContextService _context;
+
+        public ShoppingListItemController(IContextService contextService)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = contextService ?? throw new ArgumentNullException(nameof(contextService));
         }
 
         [HttpPut("{itemId}")]
+        [TypeFilter(typeof(ApplicationUserFilter))]
         public async Task<IActionResult> UpdateItem(int shoppingListId, int itemId, ShoppingListItemUpdateDto data)
         {
-            var list = await _context.ShoppingLists
+            var user = this.GetApplicationUser();
+            var list = await _context.Database.ShoppingLists
                 .Include(x => x.Items)
-                .FirstOrDefaultAsync(x => x.Id == shoppingListId);
+                .FirstOrDefaultAsync(x => x.Id == shoppingListId && x.User == user);
 
             if (list == null)
             {
@@ -36,17 +44,19 @@ namespace Shopper.Api.Controllers
             }
 
             item.Name = data.Name;
-            await _context.SaveChangesAsync();
+            await _context.Database.SaveChangesAsync();
 
             return Ok(new ShoppingListItemDto(item));
         }
 
         [HttpPut("{itemId}/status")]
+        [TypeFilter(typeof(ApplicationUserFilter))]
         public async Task<IActionResult> UpdateItemStatus(int shoppingListId, int itemId, ShoppingListItemStatus status)
         {
-            var list = await _context.ShoppingLists
+            var user = this.GetApplicationUser();
+            var list = await _context.Database.ShoppingLists
                 .Include(x => x.Items)
-                .FirstOrDefaultAsync(x => x.Id == shoppingListId);
+                .FirstOrDefaultAsync(x => x.Id == shoppingListId && x.User == user);
 
             if (list == null)
             {
@@ -61,7 +71,7 @@ namespace Shopper.Api.Controllers
             }
 
             item.Status = status;
-            await _context.SaveChangesAsync();
+            await _context.Database.SaveChangesAsync();
 
             return Ok();
         }

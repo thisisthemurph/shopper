@@ -65,7 +65,12 @@ namespace Shopper.Api.Migrations
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ShoppingLists");
                 });
@@ -113,6 +118,17 @@ namespace Shopper.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ShoppingListItemCategories");
+                });
+
+            modelBuilder.Entity("Shopper.Api.Models.ShoppingList", b =>
+                {
+                    b.HasOne("Shopper.Api.Auth.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Shopper.Api.Models.ShoppingListItem", b =>

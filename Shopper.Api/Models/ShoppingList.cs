@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Shopper.Api.Auth;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Shopper.Api.Models
@@ -6,6 +7,7 @@ namespace Shopper.Api.Models
     public class ShoppingList
     {
         public int Id { get; set; }
+        public ApplicationUser User { get; set; }
 
         [Required, StringLength(50)]
         public string Name { get; set; }
