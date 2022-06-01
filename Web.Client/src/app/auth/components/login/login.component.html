@@ -1,5 +1,5 @@
 <form
-  class="container login-form"
+  class="container form form__contained login-form"
   [formGroup]="loginForm"
   (ngSubmit)="onSubmit()"
 >
@@ -61,4 +61,6 @@
   >
     Login
   </button>
+
+  <p>Not registered? <a [routerLink]="['/auth', 'register']">sign up</a>.</p>
 </form>

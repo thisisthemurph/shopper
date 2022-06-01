@@ -1,0 +1,14 @@
+<nav class="container">
+  <section [ngSwitch]="navigationType">
+    <ul *ngSwitchCase="NavigationType.Authenticated" role="list">
+      <li><a routerLink="/list">My Lists</a></li>
+      <li><a routerLink="">Account</a></li>
+    </ul>
+
+    <ul *ngSwitchDefault role="list">
+      <li><a routerLink="">Home</a></li>
+      <li><a [routerLink]="['/auth', 'login']">Login</a></li>
+      <li><a [routerLink]="['/auth', 'register']">Sign up</a></li>
+    </ul>
+  </section>
+</nav>

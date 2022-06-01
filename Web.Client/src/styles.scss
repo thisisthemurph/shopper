@@ -7,7 +7,7 @@ body {
 }
 
 .container {
-  padding: 0 1rem;
+  padding: 1rem;
 }
 
 p {
@@ -67,6 +67,16 @@ input {
 form,
 .form {
   width: 100%;
+  padding: 2rem;
+
+  &__contained {
+    width: 80%;
+    max-width: 550px;
+    margin: auto;
+
+    border-radius: 10px;
+    background-color: rgb(237, 237, 237);
+  }
 
   .alert {
     padding: 0.5rem 1rem;
