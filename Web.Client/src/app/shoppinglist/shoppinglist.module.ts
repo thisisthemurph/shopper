@@ -8,6 +8,7 @@ import { FunctionBarComponent } from '../shoppinglist/components/function-bar/fu
 import { ListGroupPageComponent } from './pages/list-group-page/list-group-page.component';
 import { FormsModule } from '@angular/forms';
 import { ListPageComponent } from './pages/list-page/list-page.component';
+import { ShareModule } from '../share/share.module';
 
 const routes: Routes = [
   { path: '', component: ListGroupPageComponent },
@@ -27,6 +28,7 @@ const routes: Routes = [
     CommonModule,
     HttpClientModule,
     FormsModule,
+    ShareModule,
   ],
   exports: [],
 })
