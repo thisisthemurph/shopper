@@ -9,6 +9,7 @@ import { ListGroupPageComponent } from './pages/list-group-page/list-group-page.
 import { FormsModule } from '@angular/forms';
 import { ListPageComponent } from './pages/list-page/list-page.component';
 import { ShareModule } from '../share/share.module';
+import { MatIconModule } from '@angular/material/icon';
 
 const routes: Routes = [
   { path: '', component: ListGroupPageComponent },
@@ -29,6 +30,7 @@ const routes: Routes = [
     HttpClientModule,
     FormsModule,
     ShareModule,
+    MatIconModule,
   ],
   exports: [],
 })

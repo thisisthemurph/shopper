@@ -1,25 +1,31 @@
+@use "../../../../styles/colors.scss" as c;
+
+// Variable setup
+$border-color: c.$shadow-light;
+
 .functionBar {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
 
   margin: 0 auto 1.5rem auto;
-  background-color: white;
-  border: solid 1px white;
-  border-radius: 30px;
+  background-color: c.$white;
+  border: solid 1px c.$white;
+  border-radius: 3rem;
 
   transition: box-shadow 250ms ease;
-  box-shadow: 7px 7px 12px lightgray;
+  box-shadow: 7px 7px 12px c.$shadow-light;
 
   &:focus-within {
-    border-color: rgb(236, 228, 228);
+    border-color: $border-color;
     box-shadow: unset;
   }
 
   &__logo {
     .logo {
+      margin: 0;
       font-size: 1.5rem;
-      color: rgb(177, 90, 177);
+      color: c.$black;
     }
   }
 
@@ -36,6 +42,10 @@
   }
 
   &__actions {
+    display: flex;
+    justify-content: space-around;
+    gap: 0.25rem;
+
     button {
       margin: 0;
       padding: 0 0.1rem;
@@ -45,6 +55,10 @@
 
       font-weight: bold;
       font-size: 1.25rem;
+    }
+
+    .add-function {
+      font-size: 1.9rem;
     }
   }
 }
