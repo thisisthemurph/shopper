@@ -1,14 +1,52 @@
-<nav class="container">
-  <section [ngSwitch]="navigationType">
-    <ul *ngSwitchCase="NavigationType.Authenticated" role="list">
-      <li><a routerLink="/list">My Lists</a></li>
-      <li><a routerLink="">Account</a></li>
-    </ul>
+<nav class="container" class="nav">
+  <header>
+    <section class="logo">
+      <h1>Sh</h1>
+    </section>
+    <section class="nav__buttons">
+      <button>
+        <mat-icon class="backButton" aria-label="Back button"
+          >keyboard_backspace</mat-icon
+        >
+      </button>
+      <button (click)="toggleMenu()" aria-label="Menu toggle">Menu</button>
+    </section>
+  </header>
 
-    <ul *ngSwitchDefault role="list">
-      <li><a routerLink="">Home</a></li>
-      <li><a [routerLink]="['/auth', 'login']">Login</a></li>
-      <li><a [routerLink]="['/auth', 'register']">Sign up</a></li>
-    </ul>
+  <section class="nav__menu" [class.nav__menu--open]="menuIsOpen">
+    <header *ngIf="hasHeading" class="nav__header">
+      <h2>{{ heading }}</h2>
+    </header>
+
+    <section
+      class="nav__items"
+      *ngIf="
+        navigationType === NavigationType.Authenticated;
+        else unauthenticatedMenu
+      "
+    >
+      <ul role="list" class="nav__itemList">
+        <li class="nav__item"><a routerLink="" class="nav__link">Home</a></li>
+        <li class="nav__item">
+          <a [routerLink]="['list']" class="nav__link">Your lists</a>
+        </li>
+        <li class="nav__item">
+          <a [routerLink]="['/auth', 'logout']" class="nav__link">Logout</a>
+        </li>
+      </ul>
+    </section>
   </section>
 </nav>
+<ng-template #unauthenticatedMenu>
+  <section class="nav__items">
+    <ul role="list" class="nav__itemList">
+      <li class="nav__item"><a routerLink="" class="nav__link">Home</a></li>
+      <li class="nav__item">
+        <a [routerLink]="['/auth', 'login']" class="nav__link">Login</a>
+      </li>
+      <li class="nav__item">
+        <a [routerLink]="['/auth', 'register']" class="nav__link">Sign up</a>
+      </li>
+    </ul>
+  </section>
+</ng-template>

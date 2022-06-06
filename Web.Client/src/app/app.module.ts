@@ -7,6 +7,7 @@ import { ShareModule } from './share/share.module';
 import { ShoppinglistModule } from './shoppinglist/shoppinglist.module';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent, HomePageComponent, NotFoundPageComponent],
@@ -16,6 +17,7 @@ import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.com
     ShareModule,
     ShoppinglistModule,
     AuthModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

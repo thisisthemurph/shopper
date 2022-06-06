@@ -1,0 +1,60 @@
+// https://clrs.cc/
+
+$navy: #001f3f;
+$blue: #0074d9;
+$aqua: #7fdbff;
+$teal: #39cccc;
+$purple: #b10dc9;
+$fuchsia: #f012be;
+$maroon: #85144b;
+$red: #ff4136;
+$orange: #ff851b;
+$yellow: #ffdc00;
+$olive: #3d9970;
+$green: #2ecc40;
+$lime: #01ff70;
+$black: #111111;
+$gray: #aaaaaa;
+$silver: #dddddd;
+$white: #ffffff;
+
+// Color pallet
+
+$primary-color: rgb(142, 229, 200);
+$background-light: rgb(245, 242, 242);
+$background-dark: rgb(61, 61, 61);
+
+// Font colors
+
+$font-light: rgb(212, 212, 212);
+$font-dark: $black;
+
+// Shadow colors
+
+$shadow-light: rgb(193, 183, 193);
+$shadow-dark: rgb(22, 22, 22);
+
+// Form control colors
+
+$form-background: rgb(237, 237, 237);
+$form-input-background: $silver;
+$form-component-shadow: rgb(193, 183, 193);
+
+// Button colors
+
+$button-background: $white;
+$button-border: none;
+$button-border-disabled: $shadow-light;
+$button-background-disabled: rgb(227, 227, 227);
+$button-font: rgb(68, 68, 68);
+
+// Warning colors
+
+$error: rgb(230, 145, 168);
+$error-font: rgb(95, 22, 22);
+
+// Navigation colors
+
+$navigation-background: $background-dark;
+$navigation-button-background: rgb(43, 43, 43);
+$navigation-button-background-alt: $primary-color;

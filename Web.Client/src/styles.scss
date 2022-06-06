@@ -1,9 +1,26 @@
-@import "_reset.scss";
+@use "@angular/material" as mat;
+@include mat.core();
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,700;1,400;1,600&display=swap");
 
+@import "styles/_reset";
+@import "styles/colors";
+
+html,
 body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
   font-family: "Nunito", sans-serif;
-  background-color: rgb(244, 244, 244);
+  background-color: $background-light;
+}
+
+.site-wrapper {
+  padding: 3rem 0 3rem 0;
+  position: relative;
+  z-index: 2;
+  background-color: $background-light;
 }
 
 .container {
@@ -25,18 +42,16 @@ h5 {
 
 // Form Styles
 
-$input-bg: lightgray;
-
 input {
-  background-color: $input-bg;
-  border: solid 1px $input-bg;
-  box-shadow: 5px 5px 8px rgb(193, 183, 193);
+  background-color: $form-input-background;
+  border: solid 1px $form-input-background;
+  box-shadow: 5px 5px 8px $form-component-shadow;
   border-radius: 5px;
   padding: 0.5rem 1rem;
 
   &:focus,
   &:active {
-    outline: 2px solid rgb(192, 123, 192);
+    outline: 2px solid $black;
   }
 
   &.error {
@@ -50,17 +65,17 @@ input {
   border: none;
   border-radius: 4px;
   padding: 0.5rem 1.5rem;
-  background-color: white;
-  text-shadow: 1px 1px rgb(193, 193, 193);
-  color: rgb(68, 68, 68);
-  box-shadow: 4px 4px 7px rgb(193, 183, 193);
+  background-color: $button-background;
+  text-shadow: 1px 1px lighten($button-font, 50%);
+  color: $button-font;
+  box-shadow: 4px 4px 7px $shadow-light;
 
   &:disabled {
     cursor: not-allowed;
     box-shadow: unset;
-    border: solid 1px lightgrey;
-    color: rgb(101, 91, 102);
-    background-color: rgb(227, 227, 227);
+    border: solid 1px $button-border-disabled;
+    color: lighten($button-font, 15%);
+    background-color: $button-background-disabled;
   }
 }
 
@@ -75,13 +90,13 @@ form,
     margin: auto;
 
     border-radius: 10px;
-    background-color: rgb(237, 237, 237);
+    background-color: $form-background;
   }
 
   .alert {
     padding: 0.5rem 1rem;
-    color: rgb(95, 22, 22);
-    background-color: rgb(230, 145, 168);
+    color: $error-font;
+    background-color: $error;
     border-radius: 5px;
   }
 
@@ -112,6 +127,6 @@ form,
   margin-bottom: 1rem;
 
   border-radius: 5px;
-  border: solid 1px rgb(159, 107, 255);
-  background-color: rgb(214, 192, 255);
+  border: solid 1px $black;
+  background-color: $background-dark;
 }

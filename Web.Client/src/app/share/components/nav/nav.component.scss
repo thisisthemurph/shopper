@@ -1,12 +1,91 @@
-nav {
-  ul {
-    display: flex;
-    gap: 1rem;
+@import "../../../../styles/colors.scss";
 
-    li {
-      a {
-        text-decoration: none;
-        color: rgb(212, 212, 212);
+$menuMaxWidth: 400px;
+
+.nav {
+  box-shadow: inset 0 -15px 30px -8px $shadow-dark;
+
+  header {
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    z-index: 1;
+
+    .logo h1 {
+      margin: 1rem;
+    }
+
+    .nav__buttons {
+      display: flex;
+      gap: 0.75rem;
+      margin: 1rem;
+      padding: 0.5rem 1rem;
+      border: solid 1px $black;
+      border-radius: 1rem;
+
+      box-shadow: inset 0 0 10px $black;
+
+      button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+
+        cursor: pointer;
+        color: $font-light;
+        background-color: $navigation-button-background;
+        border: none;
+        border-radius: 5px;
+        padding: 0.5rem 0.75rem;
+        box-shadow: 4px 4px 6px $black, -2px -2px 6px $black;
+
+        transition: box-shadow 200ms ease;
+
+        &:nth-last-child(2) {
+          color: $black;
+          background-color: $primary-color;
+
+          transition: box-shadow 200ms ease, background-color 0.5s ease,
+            color 200ms ease, scale 200ms ease;
+
+          &:hover {
+            color: $font-light;
+            background-color: $navigation-button-background;
+          }
+        }
+
+        &:hover {
+          transform: scale(0.98);
+          box-shadow: unset;
+        }
+      }
+    }
+  }
+
+  &__menu {
+    max-height: 0;
+    transition: max-height 250ms ease-in;
+
+    &--open {
+      max-height: 500px;
+    }
+  }
+
+  &__itemList {
+    margin: 0;
+  }
+
+  &__item {
+    a {
+      display: block;
+      color: $font-light;
+      text-decoration: none;
+      padding: 1rem 2rem;
+
+      &:hover {
+        background-color: $navigation-background;
       }
     }
   }
