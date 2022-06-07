@@ -43,6 +43,11 @@ $menuMaxWidth: 400px;
 
         transition: box-shadow 200ms ease;
 
+        &:hover {
+          transform: scale(0.98);
+          box-shadow: unset;
+        }
+
         &:nth-last-child(2) {
           color: $black;
           background-color: $primary-color;
@@ -54,11 +59,21 @@ $menuMaxWidth: 400px;
             color: $font-light;
             background-color: $navigation-button-background;
           }
-        }
 
-        &:hover {
-          transform: scale(0.98);
-          box-shadow: unset;
+          &:disabled {
+            cursor: not-allowed;
+            color: $font-light;
+            background-color: $navigation-button-background-disabled;
+            box-shadow: unset;
+            transform: none;
+
+            border: solid px $black;
+
+            &:hover {
+              color: $font-light;
+              background-color: $navigation-button-background-disabled;
+            }
+          }
         }
       }
     }

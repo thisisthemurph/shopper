@@ -4,7 +4,7 @@
       <h1>Sh</h1>
     </section>
     <section class="nav__buttons">
-      <button>
+      <button [disabled]="!backButtonHasPath()" (click)="onBackButtonClick()">
         <mat-icon class="backButton" aria-label="Back button"
           >keyboard_backspace</mat-icon
         >

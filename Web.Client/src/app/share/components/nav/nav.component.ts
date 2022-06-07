@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { NavService } from '../../services/nav.service';
@@ -21,10 +22,13 @@ export class NavComponent implements OnInit, OnDestroy {
   public navigationType: NavigationTypeEnum =
     NavigationTypeEnum.Unauthenticated;
 
+  public backButtonPath: string[] = [];
+  public backButtonPathChangedSubscription$: Subscription | undefined;
   public menuIsOpen: boolean = false;
-  public navOpenSubscription: Subscription | undefined;
+  public navOpenSubscription$: Subscription | undefined;
 
   constructor(
+    private router: Router,
     private authService: AuthService,
     private navService: NavService
   ) {}
@@ -34,24 +38,39 @@ export class NavComponent implements OnInit, OnDestroy {
       ? NavigationTypeEnum.Authenticated
       : NavigationTypeEnum.Unauthenticated;
 
-    this.navOpenSubscription = this.navService
+    this.navOpenSubscription$ = this.navService
       .getNavigationChangeEmitter()
       .subscribe((value) => {
         this.menuIsOpen = value;
         console.log({ nav: value });
       });
+
+    this.backButtonPathChangedSubscription$ = this.navService
+      .getBackButtonPathEmitter()
+      .subscribe((path) => {
+        this.backButtonPath = path;
+      });
   }
 
   ngOnDestroy(): void {
-    this.navOpenSubscription?.unsubscribe();
+    this.navOpenSubscription$?.unsubscribe();
+    this.backButtonPathChangedSubscription$?.unsubscribe();
   }
 
   public get hasHeading(): boolean {
     return this.heading.length > 0;
   }
 
-  public toggleMenu() {
+  public toggleMenu(): void {
     console.log({ was: this.menuIsOpen });
     this.navService.emitToggle(!this.menuIsOpen);
+  }
+
+  public backButtonHasPath(): boolean {
+    return this.backButtonPath.length > 0;
+  }
+
+  public onBackButtonClick(): void {
+    this.router.navigate(this.backButtonPath);
   }
 }

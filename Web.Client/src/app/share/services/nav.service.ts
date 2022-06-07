@@ -5,14 +5,24 @@ import { EventEmitter, Injectable } from '@angular/core';
 })
 export class NavService {
   private navigationChangeEvent: EventEmitter<boolean> = new EventEmitter();
+  private backButtonPathChangeEvent: EventEmitter<string[]> =
+    new EventEmitter();
 
   constructor() {}
+
+  public getNavigationChangeEmitter(): EventEmitter<boolean> {
+    return this.navigationChangeEvent;
+  }
 
   public emitToggle(open: boolean): void {
     this.navigationChangeEvent.emit(open);
   }
 
-  public getNavigationChangeEmitter(): EventEmitter<boolean> {
-    return this.navigationChangeEvent;
+  public getBackButtonPathEmitter(): EventEmitter<string[]> {
+    return this.backButtonPathChangeEvent;
+  }
+
+  public emitBackButtonPathChangeEvent(path: string[]) {
+    this.backButtonPathChangeEvent.emit(path);
   }
 }

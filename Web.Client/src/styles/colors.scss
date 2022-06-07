@@ -27,6 +27,7 @@ $background-dark: rgb(61, 61, 61);
 // Font colors
 
 $font-light: rgb(212, 212, 212);
+$font-light-shade2: rgb(177, 177, 177);
 $font-dark: $black;
 
 // Shadow colors
@@ -58,3 +59,4 @@ $error-font: rgb(95, 22, 22);
 $navigation-background: $background-dark;
 $navigation-button-background: rgb(43, 43, 43);
 $navigation-button-background-alt: $primary-color;
+$navigation-button-background-disabled: $gray;
