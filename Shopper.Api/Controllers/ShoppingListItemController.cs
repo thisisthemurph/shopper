@@ -24,12 +24,15 @@ namespace Shopper.Api.Controllers
 
         [HttpPut("{itemId}")]
         [TypeFilter(typeof(ApplicationUserFilter))]
-        public async Task<IActionResult> UpdateItem(int shoppingListId, int itemId, ShoppingListItemUpdateDto data)
+        public async Task<ActionResult<ShoppingListItemDto>> UpdateItem(
+            int shoppingListId, int itemId, ShoppingListItemUpdateDto data, CancellationToken cancellationToken)
         {
             var user = this.GetApplicationUser();
             var list = await _context.Database.ShoppingLists
                 .Include(x => x.Items)
-                .FirstOrDefaultAsync(x => x.Id == shoppingListId && x.User == user);
+                .FirstOrDefaultAsync(
+                    x => x.Id == shoppingListId && x.User == user, 
+                    cancellationToken);
 
             if (list == null)
             {
@@ -44,19 +47,22 @@ namespace Shopper.Api.Controllers
             }
 
             item.Name = data.Name;
-            await _context.Database.SaveChangesAsync();
+            await _context.Database.SaveChangesAsync(cancellationToken);
 
             return Ok(new ShoppingListItemDto(item));
         }
 
         [HttpPut("{itemId}/status")]
         [TypeFilter(typeof(ApplicationUserFilter))]
-        public async Task<IActionResult> UpdateItemStatus(int shoppingListId, int itemId, ShoppingListItemStatus status)
+        public async Task<ActionResult<ShoppingListItemDto>> UpdateItemStatus(
+            int shoppingListId, int itemId, ShoppingListItemStatus status, CancellationToken cancellationToken)
         {
             var user = this.GetApplicationUser();
             var list = await _context.Database.ShoppingLists
                 .Include(x => x.Items)
-                .FirstOrDefaultAsync(x => x.Id == shoppingListId && x.User == user);
+                .FirstOrDefaultAsync(
+                    x => x.Id == shoppingListId && x.User == user,
+                    cancellationToken);
 
             if (list == null)
             {
@@ -71,9 +77,9 @@ namespace Shopper.Api.Controllers
             }
 
             item.Status = status;
-            await _context.Database.SaveChangesAsync();
+            await _context.Database.SaveChangesAsync(cancellationToken);
 
-            return Ok();
+            return Ok(new ShoppingListItemDto(item));
         }
     }
 }

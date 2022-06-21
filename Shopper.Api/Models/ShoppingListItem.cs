@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Shopper.Api.Models
 {
@@ -15,6 +16,8 @@ namespace Shopper.Api.Models
 
         [DefaultValue(ShoppingListItemStatus.Unchecked)]
         public ShoppingListItemStatus Status { get; set; } = ShoppingListItemStatus.Unchecked;
+
+        [JsonIgnore]
         public ShoppingList ShoppingList { get; set; }
     }
 }

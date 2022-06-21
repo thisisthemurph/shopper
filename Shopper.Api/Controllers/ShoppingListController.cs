@@ -27,7 +27,7 @@ namespace Shopper.Api.Controllers
 
         [HttpGet]
         [TypeFilter(typeof(ApplicationUserFilter))]
-        public async Task<IActionResult> GetAllShoppingLists()
+        public async Task<ActionResult<List<ShoppingListDto>>> GetAllShoppingLists(CancellationToken cancellationToken)
         {
             var user = this.GetApplicationUser();
 
@@ -35,20 +35,22 @@ namespace Shopper.Api.Controllers
                 .Include(list => list.Items)
                 .Where(list => list.User == user)
                 .Select(list => new ShoppingListDto(list))
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return Ok(userLists);
         }
 
         [HttpGet("{listId}")]
         [TypeFilter(typeof(ApplicationUserFilter))]
-        public async Task<ActionResult> GetShoppingList(int listId)
+        public async Task<ActionResult<ShoppingListDto>> GetShoppingList(int listId, CancellationToken cancellationToken)
         {
             var user = this.GetApplicationUser();
 
             var foundList = await _context.Database.ShoppingLists
                 .Include(list => list.Items)
-                .FirstOrDefaultAsync(list => list.Id == listId && list.User == user);
+                .FirstOrDefaultAsync(
+                    list => list.Id == listId && list.User == user, 
+                    cancellationToken);
 
             if (foundList == null)
             {
@@ -60,9 +62,14 @@ namespace Shopper.Api.Controllers
 
         [HttpPost]
         [TypeFilter(typeof(ApplicationUserFilter))]
-        public async Task<ActionResult> CreateShoppingList(ShoppingListCreateDto shoppingList)
+        public async Task<ActionResult<ShoppingListDto>> CreateShoppingList(ShoppingListCreateDto shoppingList, CancellationToken cancellationToken)
         {
-            var user = this.GetApplicationUser();
+            ApplicationUser? user = this.GetApplicationUser();
+
+            if (user is null)
+            {
+                return Unauthorized();
+            }
 
             var newShoppingList = new ShoppingList
             {
@@ -74,7 +81,7 @@ namespace Shopper.Api.Controllers
             };
 
             _context.Database.ShoppingLists.Add(newShoppingList);
-            await _context.Database.SaveChangesAsync();
+            await _context.Database.SaveChangesAsync(cancellationToken);
 
             return CreatedAtAction(
                 nameof(GetShoppingList), 
@@ -84,13 +91,16 @@ namespace Shopper.Api.Controllers
 
         [HttpPost("{listId}/item")]
         [TypeFilter(typeof(ApplicationUserFilter))]
-        public async Task<ActionResult> AddShoppingListItem(int listId, ShoppingListItemCreateDto shoppingListItem)
+        public async Task<ActionResult<ShoppingListItemDto>> AddShoppingListItem(
+            int listId, ShoppingListItemCreateDto shoppingListItem, CancellationToken cancellationToken)
         {
             var user = this.GetApplicationUser();
 
             var shoppingList = await _context.Database.ShoppingLists
                 .Include(list => list.Items)
-                .FirstOrDefaultAsync(list => list.Id == listId && list.User == user);
+                .FirstOrDefaultAsync(
+                    list => list.Id == listId && list.User == user, 
+                    cancellationToken);
 
             if (shoppingList == null)
             {
@@ -105,17 +115,22 @@ namespace Shopper.Api.Controllers
             shoppingList.Items.Add(item);
             await _context.Database.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetShoppingList), new { ListId = shoppingList.Id }, null);
+            return CreatedAtAction(
+                nameof(GetShoppingList),
+                new { ListId = shoppingList.Id },
+                new ShoppingListItemDto(item));
         }
 
         [HttpPut("{listId}")]
         [TypeFilter(typeof(ApplicationUserFilter))]
-        public async Task<ActionResult> UpdateList(int listId, ShoppingListCreateDto newDetails)
+        public async Task<ActionResult<ShoppingListDto>> UpdateList(int listId, ShoppingListCreateDto newDetails, CancellationToken cancellationToken)
         {
             var user = this.GetApplicationUser();
 
-            var shoppingList = _context.Database.ShoppingLists
-                .FirstOrDefault(list => list.Id == listId && list.User == user);
+            var shoppingList = await _context.Database.ShoppingLists
+                .FirstOrDefaultAsync(
+                    list => list.Id == listId && list.User == user,
+                    cancellationToken);
 
             if (shoppingList == null)
             {
@@ -126,18 +141,20 @@ namespace Shopper.Api.Controllers
             shoppingList.Description = newDetails.Description;
             shoppingList.UpdatedAt = DateTimeOffset.Now;
 
-            await _context.Database.SaveChangesAsync();
+            await _context.Database.SaveChangesAsync(cancellationToken);
             return Ok(new ShoppingListDto(shoppingList));
         }
 
         [HttpDelete("listId")]
         [TypeFilter(typeof(ApplicationUserFilter))]
-        public async Task<ActionResult> Delete(int listId)
+        public async Task<ActionResult<ShoppingListDto>> Delete(int listId, CancellationToken cancellationToken)
         {
             var user = this.GetApplicationUser();
 
-            var foundList = _context.Database.ShoppingLists
-                .FirstOrDefault(list => list.Id == listId && list.User == user);
+            var foundList = await _context.Database.ShoppingLists
+                .FirstOrDefaultAsync(
+                    list => list.Id == listId && list.User == user,
+                    cancellationToken);
 
             if (foundList == null)
             {
@@ -145,7 +162,7 @@ namespace Shopper.Api.Controllers
             }
 
             _context.Database.ShoppingLists.Remove(foundList);
-            await _context.Database.SaveChangesAsync();
+            await _context.Database.SaveChangesAsync(cancellationToken);
 
             return Ok(new ShoppingListDto(foundList));
         }
