@@ -1,0 +1,17 @@
+<div class="options-menu" (clickOutside)="onClickOutside()">
+  <button class="options-menu__button" (click)="openMenu()">...</button>
+  <dialog [open]="isOpen" (keyup.esc)="closeMenu()">
+    <main class="items">
+      <button
+        *ngFor="let item of items"
+        class="itemBtn itemBtn__{{
+          item.variant || OptionsMenuVariantEnum.Normal
+        }}"
+        (click)="onItemClick(item.onClick)"
+      >
+        {{ item.text }}
+      </button>
+    </main>
+  </dialog>
+</div>
+<div class="backdrop" *ngIf="isOpen">s</div>

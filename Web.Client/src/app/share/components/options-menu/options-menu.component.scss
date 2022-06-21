@@ -1,0 +1,56 @@
+@import "../../../../styles/colors.scss";
+
+$br: 5px;
+
+dialog {
+  z-index: 2;
+  padding: 0;
+  border: solid 2px black;
+  border-radius: 6px;
+  box-shadow: 0 5px 20px $shadow-dark;
+
+  .items {
+    display: flex;
+    flex-direction: column;
+
+    .itemBtn {
+      cursor: pointer;
+      border: none;
+      padding: 1rem 1.5rem;
+
+      &:first-child {
+        border-radius: $br $br 0 0;
+      }
+
+      &:last-child {
+        border-radius: 0 0 $br $br;
+      }
+
+      &:focus {
+        outline-offset: -5px;
+        outline-style: auto;
+
+        // Hack to ensure outline is on top
+        z-index: 10;
+      }
+
+      &__error {
+        color: $white;
+        background-color: lighten($red, 10%);
+
+        &:hover {
+          background-color: $red;
+        }
+      }
+    }
+  }
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba($black, 0.3);
+}
