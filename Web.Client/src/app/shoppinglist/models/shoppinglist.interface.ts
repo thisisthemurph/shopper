@@ -20,3 +20,7 @@ export interface ShoppingListCreateDto {
   name: string;
   description: string;
 }
+
+export interface ShoppingListItemCreateDto {
+  name: string;
+}

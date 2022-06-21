@@ -39,4 +39,8 @@ export class ListPageComponent implements OnInit, OnDestroy {
     this.navService.getBackButtonPathEmitter().emit([]);
     this.shoppingListSubscription$?.unsubscribe();
   }
+
+  public createShoppingListItem = (shoppingListItemName: string) => {
+    this.shoppingService.onCreateShoppingListItem.emit(shoppingListItemName);
+  };
 }

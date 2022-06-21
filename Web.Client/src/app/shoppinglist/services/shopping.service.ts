@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import {
   ShoppingList,
   ShoppingListCreateDto,
+  ShoppingListItem,
+  ShoppingListItemCreateDto,
 } from '../models/shoppinglist.interface';
 import { ApiService } from 'src/app/api/services/api.service';
 
@@ -17,8 +19,12 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class ShoppingService {
-  public onCreate: EventEmitter<string> = new EventEmitter<string>();
   private urlPath = 'ShoppingList';
+
+  public onCreateShoppingList: EventEmitter<string> =
+    new EventEmitter<string>();
+  public onCreateShoppingListItem: EventEmitter<string> =
+    new EventEmitter<string>();
 
   constructor(private api: ApiService) {}
 
@@ -33,5 +39,13 @@ export class ShoppingService {
 
   public add(shoppingList: ShoppingListCreateDto): Observable<ShoppingList> {
     return this.api.post<ShoppingList>(this.urlPath, shoppingList);
+  }
+
+  public addNewItem(
+    shoppingListId: number,
+    shoppingListItem: ShoppingListItemCreateDto
+  ): Observable<ShoppingListItem> {
+    const url = `${this.urlPath}/${shoppingListId}/item`;
+    return this.api.post<ShoppingListItem>(url, shoppingListItem);
   }
 }

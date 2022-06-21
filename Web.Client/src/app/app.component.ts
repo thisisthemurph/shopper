@@ -18,7 +18,6 @@ export class AppComponent implements OnInit, OnDestroy {
       .getNavigationChangeEmitter()
       .subscribe((value) => {
         this.navIsOpen = value;
-        console.log({ app: value });
       });
   }
 

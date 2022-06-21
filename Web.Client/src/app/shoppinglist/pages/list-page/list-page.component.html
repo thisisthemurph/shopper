@@ -2,5 +2,8 @@
   *ngIf="shoppingList"
   [heading]="shoppingList.name"
 ></app-page-header>
-<app-function-bar placeholder="Create a new list item"></app-function-bar>
+<app-function-bar
+  placeholder="Create a new list item"
+  [actionCallback]="createShoppingListItem"
+></app-function-bar>
 <app-list [shoppingList]="shoppingList"></app-list>

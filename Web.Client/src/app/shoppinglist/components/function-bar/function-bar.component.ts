@@ -8,11 +8,17 @@ import { ShoppingService } from 'src/app/shoppinglist/services/shopping.service'
 })
 export class FunctionBarComponent {
   @Input() placeholder: string = '';
+  @Input() actionCallback: ((value: string) => void) | undefined;
+
   public value: string = '';
 
-  constructor(private shoppingService: ShoppingService) {}
+  constructor() {}
 
   onAction(): void {
-    this.shoppingService.onCreate.emit(this.value);
+    if (this.actionCallback === undefined) {
+      return;
+    }
+
+    this.actionCallback(this.value);
   }
 }

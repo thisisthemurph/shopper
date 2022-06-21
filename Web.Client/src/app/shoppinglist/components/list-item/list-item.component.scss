@@ -1,0 +1,21 @@
+.item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+
+  margin-bottom: 1rem;
+
+  &__content {
+    display: flex;
+
+    width: 85%;
+    padding: 1rem;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  &__actions {
+  }
+}

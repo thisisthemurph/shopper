@@ -42,7 +42,6 @@ export class NavComponent implements OnInit, OnDestroy {
       .getNavigationChangeEmitter()
       .subscribe((value) => {
         this.menuIsOpen = value;
-        console.log({ nav: value });
       });
 
     this.backButtonPathChangedSubscription$ = this.navService
@@ -62,7 +61,6 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   public toggleMenu(): void {
-    console.log({ was: this.menuIsOpen });
     this.navService.emitToggle(!this.menuIsOpen);
   }
 

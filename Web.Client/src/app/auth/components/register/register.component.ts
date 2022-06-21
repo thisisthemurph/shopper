@@ -8,7 +8,6 @@ import {
 import { take } from 'rxjs';
 import { standardHttpErrorResponseToErrorArray } from 'src/app/api/helpers/httpErrorResponse.helper';
 import { StandardHttpErrorResponse } from 'src/app/api/models/httpErrorResponse.interface';
-import { Auth } from '../../Auth';
 import { AuthService } from '../../services/auth.service';
 
 @Component({

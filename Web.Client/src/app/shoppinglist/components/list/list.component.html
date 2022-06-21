@@ -11,7 +11,9 @@
       role="list"
       *ngIf="shoppingList && shoppingList.items.length > 0"
     >
-      <li class="list-item" *ngFor="let item of shoppingList.items"></li>
+      <li class="list-item" *ngFor="let item of shoppingList.items">
+        <app-list-item [shoppingListItem]="item"></app-list-item>
+      </li>
     </ul>
 
     <!-- There are no items in the list -->

@@ -2,5 +2,8 @@
   heading="Shopping lists"
   caption="All your lists in one place."
 ></app-page-header>
-<app-function-bar placeholder="Create a new list"></app-function-bar>
+<app-function-bar
+  placeholder="Create a new list"
+  [actionCallback]="createNewShoppingList"
+></app-function-bar>
 <app-list-group></app-list-group>

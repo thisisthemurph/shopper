@@ -15,8 +15,8 @@ export class ListGroupComponent implements OnInit, OnDestroy {
   constructor(private shoppingService: ShoppingService) {}
 
   ngOnInit() {
-    this.onCreate$ = this.shoppingService.onCreate.subscribe((listName) =>
-      this.createShoppingList(listName)
+    this.onCreate$ = this.shoppingService.onCreateShoppingList.subscribe(
+      (listName) => this.createShoppingList(listName)
     );
 
     this.shoppingService
