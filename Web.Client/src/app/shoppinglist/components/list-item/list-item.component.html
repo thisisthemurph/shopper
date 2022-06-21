@@ -3,6 +3,9 @@
     <p class="item__title">{{ shoppingListItem?.name }}</p>
   </button>
   <aside class="item__actions">
-    <button class="item__optionsBtn">...</button>
+    <app-options-menu
+      [key]="shoppingListItem?.id || -1"
+      [items]="optionMenuItems"
+    ></app-options-menu>
   </aside>
 </div>
