@@ -15,4 +15,10 @@
       margin: 0;
     }
   }
+
+  &--checked {
+    & .item__title {
+      text-decoration: line-through;
+    }
+  }
 }

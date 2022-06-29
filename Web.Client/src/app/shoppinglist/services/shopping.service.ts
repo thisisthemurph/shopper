@@ -8,6 +8,7 @@ import {
   ShoppingListItemCreateDto,
 } from '../models/shoppinglist.interface';
 import { ApiService } from 'src/app/api/services/api.service';
+import { ShoppingListItemStatusType } from '../models/shoppinglist.enums';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -47,5 +48,14 @@ export class ShoppingService {
   ): Observable<ShoppingListItem> {
     const url = `${this.urlPath}/${shoppingListId}/item`;
     return this.api.post<ShoppingListItem>(url, shoppingListItem);
+  }
+
+  public updateItemStatus(
+    shoppingListId: number,
+    itemId: number,
+    status: ShoppingListItemStatusType
+  ): Observable<ShoppingListItem> {
+    const url = `${this.urlPath}/${shoppingListId}/Item/${itemId}/status`;
+    return this.api.put<ShoppingListItem>(url, status);
   }
 }

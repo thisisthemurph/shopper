@@ -1,9 +1,11 @@
+import { ShoppingListItemStatusType } from './shoppinglist.enums';
+
 export interface ShoppingListItem {
   id: number;
   listId: number;
   name: string;
   category: null;
-  status: number;
+  status: ShoppingListItemStatusType;
 }
 
 export interface ShoppingList {

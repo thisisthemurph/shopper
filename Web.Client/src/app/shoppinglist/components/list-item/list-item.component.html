@@ -1,6 +1,6 @@
-<div class="item">
-  <button class="item__content">
-    <p class="item__title">{{ shoppingListItem?.name }}</p>
+<div class="item" [ngClass]="{ 'item--checked': isChecked }">
+  <button class="item__content" (click)="onChangeStatus()">
+    <p class="item__title">{{ name }} = {{ status }}</p>
   </button>
   <aside class="item__actions">
     <app-options-menu
