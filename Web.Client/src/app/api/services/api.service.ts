@@ -12,6 +12,10 @@ const defaultHttpOptions = {
   headers: new HttpHeaders(defaultHttpHeaders),
 };
 
+interface Headers {
+  headers: HttpHeaders;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -21,17 +25,25 @@ export class ApiService {
 
   public get<T>(path: string, authenticate = true): Observable<T> {
     // TODO: Validate the path
-    const url = this.baseUrl + path;
-    const options = this.buildHttpOptions(authenticate);
-
+    const [url, options] = this.getStandardUrlAndOptions(path, authenticate);
     return this.http.get<T>(url, options);
   }
 
   public post<T>(path: string, body: any): Observable<T> {
-    const url = this.baseUrl + path; // TODO: Validate
-    const options = this.buildHttpOptions(true);
-
+    const [url, options] = this.getStandardUrlAndOptions(path);
     return this.http.post<T>(url, body, options);
+  }
+
+  public put<T>(path: string, body: any): Observable<T> {
+    const [url, options] = this.getStandardUrlAndOptions(path);
+    return this.http.put<T>(url, body, options);
+  }
+
+  private getStandardUrlAndOptions(
+    path: string,
+    authenticate = true
+  ): [string, Headers] {
+    return [this.baseUrl + path, this.buildHttpOptions(authenticate)];
   }
 
   private buildHttpOptions(authenticate: boolean) {

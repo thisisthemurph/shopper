@@ -2,7 +2,7 @@ import { StandardHttpErrorResponse } from '../models/httpErrorResponse.interface
 
 /**
  * Takes an StandardHttpErrorResponse object and pulls out the error messages
- * @param errorResponse the HTTP error respnse
+ * @param errorResponse the HTTP error response
  * @returns an array of error messages
  */
 export const standardHttpErrorResponseToErrorArray = (
