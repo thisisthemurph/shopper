@@ -1,6 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, take } from 'rxjs';
-import { ShoppingList } from '../../models/shoppinglist.interface';
+import {
+  ShoppingList,
+  ShoppingListItem,
+} from '../../models/shoppinglist.interface';
 import { ShoppingService } from '../../services/shopping.service';
 
 @Component({
@@ -21,8 +24,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.onCreate$ = this.shoppingService.onCreateShoppingListItem.subscribe(
-      (shoppingListItemName) =>
-        this.createShoppingListItem(shoppingListItemName)
+      (itemName) => this.createShoppingListItem(itemName)
     );
   }
 
@@ -43,5 +45,13 @@ export class ListComponent implements OnInit, OnDestroy {
       .subscribe((shoppingListItem) => {
         this.shoppingList?.items.push(shoppingListItem);
       });
+  }
+
+  public removeItem(listItem: ShoppingListItem) {
+    if (!this.shoppingList) return;
+
+    this.shoppingList.items = this.shoppingList.items.filter(
+      (item) => item.id !== listItem.id
+    );
   }
 }
