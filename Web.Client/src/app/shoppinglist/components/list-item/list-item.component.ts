@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { take } from 'rxjs';
 import {
   OptionsMenuItem,
@@ -15,12 +15,13 @@ import { ShoppingService } from '../../services/shopping.service';
 })
 export class ListItemComponent implements OnInit {
   @Input() shoppingListItem!: ShoppingListItem;
+  @Output() removeItemEvent = new EventEmitter<ShoppingListItem>();
 
   public optionMenuItems: OptionsMenuItem[] = [
     {
       text: 'Delete',
       variant: OptionsMenuVariant.Error,
-      onClick: () => console.log('Deleting...'),
+      onClick: this.onDelete.bind(this),
     },
     { text: 'Set status', onClick: () => console.log('Setting...') },
     { text: 'More', onClick: () => console.log('Mooring...') },
@@ -29,6 +30,14 @@ export class ListItemComponent implements OnInit {
   constructor(private shoppingService: ShoppingService) {}
 
   ngOnInit(): void {}
+
+  public get listId(): number {
+    return this.shoppingListItem.listId;
+  }
+
+  public get itemId(): number {
+    return this.shoppingListItem.id;
+  }
 
   public get name(): string {
     return this.shoppingListItem.name;
@@ -43,35 +52,31 @@ export class ListItemComponent implements OnInit {
   }
 
   public onChangeStatus(): void {
-    console.log('onChangeStatus()');
-
-    // if (!this.shoppingListItem.listId || !this.shoppingListItem.id) {
-    //   return;
-    // }
-
+    console.log(this);
     const newStatus =
       this.shoppingListItem?.status === ShoppingListItemStatusType.Checked
         ? ShoppingListItemStatusType.Unchecked
         : ShoppingListItemStatusType.Checked;
 
-    console.log({ currentStatus: this.shoppingListItem.status });
-    console.log({ newStatus });
-
     this.shoppingService
-      .updateItemStatus(
-        this.shoppingListItem?.listId,
-        this.shoppingListItem?.id,
-        newStatus
-      )
+      .updateItemStatus(this.listId, this.itemId, newStatus)
       .pipe(take(1))
       .subscribe((item) => {
-        console.log({ item });
-
-        // if (this.shoppingListItem === undefined) {
-        //   return;
-        // }
-
         this.shoppingListItem.status = item.status;
+      });
+  }
+
+  private onDelete(): void {
+    if (!confirm('Are you sure you want to delete this item?')) {
+      return;
+    }
+
+    this.shoppingService
+      .deleteItem(this.listId, this.itemId)
+      .pipe(take(1))
+      .subscribe((deletedItem) => {
+        console.log(`You have deleted ${deletedItem.name}`);
+        this.removeItemEvent.emit(this.shoppingListItem);
       });
   }
 }

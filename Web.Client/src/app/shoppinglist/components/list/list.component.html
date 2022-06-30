@@ -12,7 +12,10 @@
       *ngIf="shoppingList && shoppingList.items.length > 0"
     >
       <li class="list-item" *ngFor="let item of shoppingList.items">
-        <app-list-item [shoppingListItem]="item"></app-list-item>
+        <app-list-item
+          [shoppingListItem]="item"
+          (removeItemEvent)="removeItem($event)"
+        ></app-list-item>
       </li>
     </ul>
 
@@ -28,6 +31,4 @@
       </li>
     </ul>
   </main>
-
-  <pre>{{ shoppingList | json }}</pre>
 </div>

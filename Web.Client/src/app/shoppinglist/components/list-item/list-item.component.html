@@ -1,10 +1,10 @@
 <div class="item" [ngClass]="{ 'item--checked': isChecked }">
   <button class="item__content" (click)="onChangeStatus()">
-    <p class="item__title">{{ name }} = {{ status }}</p>
+    <p class="item__title">{{ name | sentencecase }}</p>
   </button>
   <aside class="item__actions">
     <app-options-menu
-      [key]="shoppingListItem?.id || -1"
+      [key]="itemId"
       [items]="optionMenuItems"
     ></app-options-menu>
   </aside>
