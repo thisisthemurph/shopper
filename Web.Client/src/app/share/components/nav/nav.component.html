@@ -31,7 +31,12 @@
           <a [routerLink]="['list']" class="nav__link">Your lists</a>
         </li>
         <li class="nav__item">
-          <a [routerLink]="['/auth', 'logout']" class="nav__link">Logout</a>
+          <a
+            [routerLink]="['auth', 'login']"
+            (click)="onLogout()"
+            class="nav__link"
+            >Logout</a
+          >
         </li>
       </ul>
     </section>

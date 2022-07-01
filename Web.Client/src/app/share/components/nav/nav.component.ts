@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Auth } from 'src/app/auth/Auth';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { NavService } from '../../services/nav.service';
 
@@ -26,6 +27,7 @@ export class NavComponent implements OnInit, OnDestroy {
   public backButtonPathChangedSubscription$: Subscription | undefined;
   public menuIsOpen: boolean = false;
   public navOpenSubscription$: Subscription | undefined;
+  public isLoggedInSubscription$: Subscription | undefined;
 
   constructor(
     private router: Router,
@@ -49,11 +51,20 @@ export class NavComponent implements OnInit, OnDestroy {
       .subscribe((path) => {
         this.backButtonPath = path;
       });
+
+    this.isLoggedInSubscription$ = this.authService.isLoggedInEvent.subscribe(
+      (isLoggedIn) => {
+        this.navigationType = isLoggedIn
+          ? NavigationTypeEnum.Authenticated
+          : NavigationTypeEnum.Unauthenticated;
+      }
+    );
   }
 
   ngOnDestroy(): void {
     this.navOpenSubscription$?.unsubscribe();
     this.backButtonPathChangedSubscription$?.unsubscribe();
+    this.isLoggedInSubscription$?.unsubscribe();
   }
 
   public get hasHeading(): boolean {
@@ -70,5 +81,9 @@ export class NavComponent implements OnInit, OnDestroy {
 
   public onBackButtonClick(): void {
     this.router.navigate(this.backButtonPath);
+  }
+
+  public onLogout() {
+    this.authService.logout();
   }
 }

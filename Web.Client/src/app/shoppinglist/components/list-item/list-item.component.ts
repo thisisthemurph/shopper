@@ -52,7 +52,6 @@ export class ListItemComponent implements OnInit {
   }
 
   public onChangeStatus(): void {
-    console.log(this);
     const newStatus =
       this.shoppingListItem?.status === ShoppingListItemStatusType.Checked
         ? ShoppingListItemStatusType.Unchecked
@@ -75,8 +74,7 @@ export class ListItemComponent implements OnInit {
       .deleteItem(this.listId, this.itemId)
       .pipe(take(1))
       .subscribe((deletedItem) => {
-        console.log(`You have deleted ${deletedItem.name}`);
-        this.removeItemEvent.emit(this.shoppingListItem);
+        this.removeItemEvent.emit(deletedItem);
       });
   }
 }
