@@ -39,6 +39,11 @@ export class ApiService {
     return this.http.put<T>(url, body, options);
   }
 
+  public delete<T>(path: string): Observable<T> {
+    const [url, options] = this.getStandardUrlAndOptions(path);
+    return this.http.delete<T>(url, options);
+  }
+
   private getStandardUrlAndOptions(
     path: string,
     authenticate = true

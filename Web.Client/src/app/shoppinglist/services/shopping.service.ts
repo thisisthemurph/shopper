@@ -1,5 +1,4 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
   ShoppingList,
@@ -9,12 +8,6 @@ import {
 } from '../models/shoppinglist.interface';
 import { ApiService } from 'src/app/api/services/api.service';
 import { ShoppingListItemStatusType } from '../models/shoppinglist.enums';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json',
-  }),
-};
 
 @Injectable({
   providedIn: 'root',
@@ -46,7 +39,7 @@ export class ShoppingService {
     shoppingListId: number,
     shoppingListItem: ShoppingListItemCreateDto
   ): Observable<ShoppingListItem> {
-    const url = `${this.urlPath}/${shoppingListId}/item`;
+    const url = `${this.urlPath}/${shoppingListId}/Item`;
     return this.api.post<ShoppingListItem>(url, shoppingListItem);
   }
 
@@ -57,5 +50,13 @@ export class ShoppingService {
   ): Observable<ShoppingListItem> {
     const url = `${this.urlPath}/${shoppingListId}/Item/${itemId}/status`;
     return this.api.put<ShoppingListItem>(url, status);
+  }
+
+  public deleteItem(
+    shoppingListId: number,
+    shoppingListItemId: number
+  ): Observable<ShoppingListItem> {
+    const url = `${this.urlPath}/${shoppingListId}/Item/${shoppingListItemId}`;
+    return this.api.delete<ShoppingListItem>(url);
   }
 }

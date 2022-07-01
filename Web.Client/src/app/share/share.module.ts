@@ -7,8 +7,8 @@ import { RouterModule } from '@angular/router';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { MatIconModule } from '@angular/material/icon';
 import { OptionsMenuComponent } from './components/options-menu/options-menu.component';
-import { ListComponent } from '../shoppinglist/components/list/list.component';
 import { ClickOutsideDirective } from './click-outside.directive';
+import { SentencecasePipe } from './pipes/sentencecase.pipe';
 
 @NgModule({
   declarations: [
@@ -17,6 +17,7 @@ import { ClickOutsideDirective } from './click-outside.directive';
     PageHeaderComponent,
     OptionsMenuComponent,
     ClickOutsideDirective,
+    SentencecasePipe,
   ],
   imports: [RouterModule, CommonModule, FormsModule, MatIconModule],
   exports: [
@@ -24,6 +25,7 @@ import { ClickOutsideDirective } from './click-outside.directive';
     PageHeaderComponent,
     NavComponent,
     OptionsMenuComponent,
+    SentencecasePipe,
   ],
 })
 export class ShareModule {}
