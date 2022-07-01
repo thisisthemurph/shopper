@@ -55,7 +55,7 @@ namespace Shopper.Api.Controllers
         [HttpPut("{itemId}/status")]
         [TypeFilter(typeof(ApplicationUserFilter))]
         public async Task<ActionResult<ShoppingListItemDto>> UpdateItemStatus(
-            int shoppingListId, int itemId, ShoppingListItemStatus status, CancellationToken cancellationToken)
+            int shoppingListId, int itemId, [FromBody] ShoppingListItemStatus status, CancellationToken cancellationToken)
         {
             var user = this.GetApplicationUser();
             var list = await _context.Database.ShoppingLists
@@ -80,6 +80,35 @@ namespace Shopper.Api.Controllers
             await _context.Database.SaveChangesAsync(cancellationToken);
 
             return Ok(new ShoppingListItemDto(item));
+        }
+
+        [HttpDelete("{itemId}")]
+        [TypeFilter(typeof(ApplicationUserFilter))]
+        public async Task<ActionResult<ShoppingListItemDto>> DeleteItem(int shoppingListId, int itemId, CancellationToken cancellationToken)
+        {
+            var user = this.GetApplicationUser();
+            var list = await _context.Database.ShoppingLists
+                .Include(x => x.Items)
+                .FirstOrDefaultAsync(
+                    x => x.Id == shoppingListId && x.User == user,
+                    cancellationToken);
+
+            if (list == null)
+            {
+                return NotFound($"A shopping list with the ID {shoppingListId} could not be found");
+            }
+
+            var itemToDelete = list.Items.FirstOrDefault(x => x.Id == itemId);
+
+            if (itemToDelete == null)
+            {
+                return BadRequest($"An item with ID {itemId} could not be found");
+            }
+
+            list.Items = list.Items.Where(x => x.Id != itemToDelete.Id).ToList();
+            await _context.Database.SaveChangesAsync(cancellationToken);
+
+            return Ok(itemToDelete);
         }
     }
 }
